@@ -94,9 +94,9 @@ namespace UnityEditor.ShaderGraph
         {
             registry.ProvideFunction("SkinningMatrices", sb =>
             {
-                sb.AppendLine("uniform StructuredBuffer<float3> _ComputeSkinPositions : register(t1);");
-                sb.AppendLine("uniform StructuredBuffer<float3> _ComputeSkinNormals : register(t2);");
-                sb.AppendLine("uniform StructuredBuffer<float4> _ComputeSkinTangents : register(t3);");
+                sb.AppendLine("uniform StructuredBuffer<float3> _DeformedMeshPositions : register(t1);");
+                sb.AppendLine("uniform StructuredBuffer<float3> _DeformedMeshNormals : register(t2);");
+                sb.AppendLine("uniform StructuredBuffer<float4> _DeformedMeshTangents : register(t3);");
             });
             registry.ProvideFunction(GetFunctionName(), sb =>
             {
@@ -109,27 +109,10 @@ namespace UnityEditor.ShaderGraph
                     sb.AppendLine("{");
                     using (sb.IndentScope())
                     {
-                        sb.AppendLine("$precision3 pos = _ComputeSkinPositions[vertIndexOffset + vertexId];");
-                        sb.AppendLine("$precision3 nrm = _ComputeSkinNormals[vertIndexOffset + vertexId];");
-                        sb.AppendLine("$precision4 tan = _ComputeSkinTangents[vertIndexOffset + vertexId];");
-//                     sb.AppendLine("");
-//                     sb.AppendLine("uint4 indices = _ComputeBoneIndices[vertIndexOffset + vertexId];");
-//                     sb.AppendLine("$precision4 weights = _ComputeBoneWeights[vertIndexOffset + vertexId];");
-//                     sb.AppendLine("");
-//                     sb.AppendLine("for (int i = 0; i < 4; i++)");
-//                     sb.AppendLine("{");
-//                     using (sb.IndentScope())
-//                     {
-//                         sb.AppendLine("$precision3x4 skinMatrix = _SkinMatrices[indices[i] + indexOffset];");
-//                         sb.AppendLine("$precision3 vtransformed = mul(skinMatrix, $precision4(pos, 1));");
-//                         sb.AppendLine("$precision3 ntransformed = mul(skinMatrix, $precision4(nrm, 0));");
-//                         sb.AppendLine("$precision3 ttransformed = mul(skinMatrix, tan);");
-//                         sb.AppendLine("");
-//                         sb.AppendLine("positionOut += vtransformed * weights[i];");
-//                         sb.AppendLine("normalOut += ntransformed * weights[i];");
-//                         sb.AppendLine("tangentOut += ttransformed * weights[i];");
-//                     }
-//                     sb.AppendLine("}");
+                        sb.AppendLine("$precision3 pos = _DeformedMeshPositions[vertIndexOffset + vertexId];");
+                        sb.AppendLine("$precision3 nrm = _DeformedMeshNormals[vertIndexOffset + vertexId];");
+                        sb.AppendLine("$precision4 tan = _DeformedMeshTangents[vertIndexOffset + vertexId];");
+                        sb.AppendLine("");
                         sb.AppendLine("positionOut = pos;");
                         sb.AppendLine("normalOut = nrm;");
                         sb.AppendLine("tangentOut = tan;");

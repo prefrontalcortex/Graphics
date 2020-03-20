@@ -94,9 +94,17 @@ namespace UnityEditor.ShaderGraph
         {
             registry.ProvideFunction("SkinningMatrices", sb =>
             {
-                sb.AppendLine("uniform StructuredBuffer<float3> _DeformedMeshPositions : register(t1);");
-                sb.AppendLine("uniform StructuredBuffer<float3> _DeformedMeshNormals : register(t2);");
-                sb.AppendLine("uniform StructuredBuffer<float4> _DeformedMeshTangents : register(t3);");
+                sb.AppendLine("struct VertexData");
+                sb.AppendLine("{");
+                using (sb.IndentScope())
+                {
+                    sb.AppendLine("float3 Position;");
+                    sb.AppendLine("float3 Normal;");
+                    sb.AppendLine("float4 Tangent;");
+                }
+                sb.AppendLine("};");
+                sb.AppendLine("");
+                sb.AppendLine("uniform StructuredBuffer<VertexData>	_DeformedMeshData : register(t1);");
             });
             registry.ProvideFunction(GetFunctionName(), sb =>
             {
@@ -105,19 +113,11 @@ namespace UnityEditor.ShaderGraph
                 sb.AppendLine("{");
                 using (sb.IndentScope())
                 {
-                    sb.AppendLine("for (int i = 0; i < 4; i++)");
-                    sb.AppendLine("{");
-                    using (sb.IndentScope())
-                    {
-                        sb.AppendLine("$precision3 pos = _DeformedMeshPositions[vertIndexOffset + vertexId];");
-                        sb.AppendLine("$precision3 nrm = _DeformedMeshNormals[vertIndexOffset + vertexId];");
-                        sb.AppendLine("$precision4 tan = _DeformedMeshTangents[vertIndexOffset + vertexId];");
-                        sb.AppendLine("");
-                        sb.AppendLine("positionOut = pos;");
-                        sb.AppendLine("normalOut = nrm;");
-                        sb.AppendLine("tangentOut = tan;");
-                    }
-                    sb.AppendLine("}");
+                    sb.AppendLine("const VertexData vertData = _DeformedMeshData[vertIndexOffset + vertexId];");
+                    sb.AppendLine("");
+                    sb.AppendLine("positionOut = vertData.Position;");
+                    sb.AppendLine("normalOut = vertData.Normal;");
+                    sb.AppendLine("tangentOut = vertData.Tangent;");
                 }
                 sb.AppendLine("}");
             });

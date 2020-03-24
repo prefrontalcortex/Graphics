@@ -166,7 +166,6 @@ namespace UnityEditor.ShaderGraph.Drawing
                     GUILayout.Label("Precision");
 
                     var precision = (ConcretePrecision)EditorGUILayout.EnumPopup(graph.concretePrecision, GUILayout.Width(100f));
-                    GUILayout.Space(4);
 
                     if (EditorGUI.EndChangeCheck())
                     {

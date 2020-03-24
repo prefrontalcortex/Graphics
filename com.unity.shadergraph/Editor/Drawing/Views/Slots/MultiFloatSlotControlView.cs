@@ -57,7 +57,7 @@ namespace UnityEditor.ShaderGraph.Drawing.Slots
             field.RegisterValueChangedCallback(evt =>
                 {
                     // Only true when setting value via FieldMouseDragger
-                    // Undo recorded once per dragger release              
+                    // Undo recorded once per dragger release
                     if (m_UndoGroup == -1)
                     {
                         m_Node.owner.owner.RegisterCompleteObjectUndo("Change " + m_Node.name);
@@ -70,9 +70,10 @@ namespace UnityEditor.ShaderGraph.Drawing.Slots
                         m_Node.Dirty(ModificationScope.Node);
                     }
                 });
-            // Reset UndoGroup when done editing input field
+            // Reset UndoGroup when done editing input field & update title
             field.Q("unity-text-input").RegisterCallback<FocusOutEvent>(evt =>
                 {
+                    m_Node.owner.owner.isDirty = true;
                     m_UndoGroup = -1;
                 });
             Add(field);

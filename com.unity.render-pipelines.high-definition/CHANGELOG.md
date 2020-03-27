@@ -94,6 +94,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added an alpha blend option for recursive rendering
 - Added support for stack lit for ray tracing effects.
 - Added support for hair for ray tracing effects.
+- Implemented ray traced reflections for transparent objects.
+- Add a new parameter to control reflections in recursive rendering.
 
 ### Fixed
 - Fix when rescale probe all direction below zero (1219246)
@@ -598,6 +600,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Changed a few resources used by ray tracing shaders to be global resources (using register space1) for improved CPU performance.
 - All custom pass volumes are now executed for one injection point instead of the first one.
 - Hidden unsupported choice in emission in Materials
+- Ignoring the disable SSR flags for recursive rendering.
 
 ## [7.1.1] - 2019-09-05
 

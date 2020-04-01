@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cf1dab834d4ec34195b920ea7bbf9ec, type: 3}
   m_Name: HDRPAsset
   m_EditorClassIdentifier: 
-  m_Version: 14
+  m_Version: 15
   m_ObsoleteFrameSettings:
     overrides: 0
     enableShadow: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_DefaultLookDevProfile: {fileID: 0}
   m_RenderingPathDefaultCameraFrameSettings:
     bitDatas:
-      data1: 70282844831580
+      data1: 140651589009244
       data2: 4539628425463136256
     lodBias: 1
     lodBiasMode: 0
@@ -164,10 +164,13 @@ MonoBehaviour:
     maximumLODLevel: 0
     maximumLODLevelMode: 0
     maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
     materialQuality: 0
   m_RenderingPathDefaultBakedOrCustomReflectionFrameSettings:
     bitDatas:
-      data1: 64942043591453
+      data1: 135310787769117
       data2: 4539628424389459968
     lodBias: 1
     lodBiasMode: 0
@@ -175,10 +178,13 @@ MonoBehaviour:
     maximumLODLevel: 0
     maximumLODLevelMode: 0
     maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
     materialQuality: 0
   m_RenderingPathDefaultRealtimeReflectionFrameSettings:
     bitDatas:
-      data1: 69692120112925
+      data1: 140060864290589
       data2: 4539628424657895424
     lodBias: 1
     lodBiasMode: 0
@@ -186,13 +192,20 @@ MonoBehaviour:
     maximumLODLevel: 0
     maximumLODLevelMode: 0
     maximumLODLevelQualityLevel: 0
+    sssQualityMode: 0
+    sssQualityLevel: 0
+    sssCustomSampleBudget: 20
     materialQuality: 0
   m_RenderPipelineSettings:
     supportShadowMask: 1
     supportSSR: 1
+    supportSSRTransparent: 0
     supportSSAO: 1
     supportSubsurfaceScattering: 1
-    increaseSssSampleCount: 0
+    sssSampleBudget:
+      m_Values: 140000002800000050000000
+      m_SchemaId:
+        m_Id: With3Levels
     supportVolumetrics: 1
     increaseResolutionOfVolumetrics: 0
     supportLightLayers: 0
@@ -224,10 +237,9 @@ MonoBehaviour:
       cookieFormat: 74
       pointCookieSize: 128
       cubeCookieTexArraySize: 16
-      cookieTexArraySize: 16
       cookieAtlasLastValidMip: 0
-      cookieAreaTextureArraySize: 16
-      planarReflectionAtlasSize: 8192
+      cookieTexArraySize: 16
+      planarReflectionAtlasSize: 1024
       reflectionProbeCacheSize: 64
       reflectionCubemapSize: 256
       reflectionCacheCompressed: 0
@@ -297,6 +309,7 @@ MonoBehaviour:
     xrSettings:
       singlePass: 1
       occlusionMesh: 1
+      cameraJitter: 0
     postProcessQualitySettings:
       NearBlurSampleCount: 030000000500000008000000
       NearBlurMaxRadius:

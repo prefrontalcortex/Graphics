@@ -22,7 +22,7 @@ namespace UnityEditor.Rendering.Universal
         SerializedProperty m_OpaqueLayerMask;
         SerializedProperty m_TransparentLayerMask;
         SerializedProperty m_DefaultStencilState;
-        SerializedProperty m_PostProcessData;
+        // SerializedProperty m_PostProcessData;
         SerializedProperty m_Shaders;
         SerializedProperty m_ShadowTransparentReceiveProp;
 
@@ -31,7 +31,7 @@ namespace UnityEditor.Rendering.Universal
             m_OpaqueLayerMask = serializedObject.FindProperty("m_OpaqueLayerMask");
             m_TransparentLayerMask = serializedObject.FindProperty("m_TransparentLayerMask");
             m_DefaultStencilState = serializedObject.FindProperty("m_DefaultStencilState");
-            m_PostProcessData = serializedObject.FindProperty("postProcessData");
+            // m_PostProcessData = serializedObject.FindProperty("postProcessData");
             m_Shaders = serializedObject.FindProperty("shaders");
             m_ShadowTransparentReceiveProp = serializedObject.FindProperty("m_ShadowTransparentReceive");
         }

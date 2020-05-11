@@ -12,7 +12,9 @@ namespace UnityEngine.Rendering.Universal
         const int k_DepthStencilBufferBits = 32;
         const string k_CreateCameraTextures = "Create Camera Texture";
 
-        // ColorGradingLutPass m_ColorGradingLutPass;
+        #if !REMOVE_POSTPROCESSING
+        ColorGradingLutPass m_ColorGradingLutPass;
+        #endif
         DepthOnlyPass m_DepthPrepass;
         MainLightShadowCasterPass m_MainLightShadowCasterPass;
         AdditionalLightsShadowCasterPass m_AdditionalLightsShadowCasterPass;
@@ -23,8 +25,11 @@ namespace UnityEngine.Rendering.Universal
         TransparentSettingsPass m_TransparentSettingsPass;
         DrawObjectsPass m_RenderTransparentForwardPass;
         InvokeOnRenderObjectCallbackPass m_OnRenderObjectCallbackPass;
-        // PostProcessPass m_PostProcessPass;
-        // PostProcessPass m_FinalPostProcessPass;
+        
+        #if !REMOVE_POSTPROCESSING
+        PostProcessPass m_PostProcessPass;
+        PostProcessPass m_FinalPostProcessPass;
+        #endif
         FinalBlitPass m_FinalBlitPass;
         CapturePass m_CapturePass;
 
@@ -69,7 +74,9 @@ namespace UnityEngine.Rendering.Universal
             m_MainLightShadowCasterPass = new MainLightShadowCasterPass(RenderPassEvent.BeforeRenderingShadows);
             m_AdditionalLightsShadowCasterPass = new AdditionalLightsShadowCasterPass(RenderPassEvent.BeforeRenderingShadows);
             m_DepthPrepass = new DepthOnlyPass(RenderPassEvent.BeforeRenderingPrepasses, RenderQueueRange.opaque, data.opaqueLayerMask);
-            // m_ColorGradingLutPass = new ColorGradingLutPass(RenderPassEvent.BeforeRenderingPrepasses, data.postProcessData);
+            #if !REMOVE_POSTPROCESSING
+            m_ColorGradingLutPass = new ColorGradingLutPass(RenderPassEvent.BeforeRenderingPrepasses, data.postProcessData);
+            #endif
             m_RenderOpaqueForwardPass = new DrawObjectsPass("Render Opaques", true, RenderPassEvent.BeforeRenderingOpaques, RenderQueueRange.opaque, data.opaqueLayerMask, m_DefaultStencilState, stencilData.stencilReference);
             m_CopyDepthPass = new CopyDepthPass(RenderPassEvent.AfterRenderingSkybox, m_CopyDepthMaterial);
             m_DrawSkyboxPass = new DrawSkyboxPass(RenderPassEvent.BeforeRenderingSkybox);
@@ -77,10 +84,14 @@ namespace UnityEngine.Rendering.Universal
             m_TransparentSettingsPass = new TransparentSettingsPass(RenderPassEvent.BeforeRenderingTransparents, data.shadowTransparentReceive);
             m_RenderTransparentForwardPass = new DrawObjectsPass("Render Transparents", false, RenderPassEvent.BeforeRenderingTransparents, RenderQueueRange.transparent, data.transparentLayerMask, m_DefaultStencilState, stencilData.stencilReference);
             m_OnRenderObjectCallbackPass = new InvokeOnRenderObjectCallbackPass(RenderPassEvent.BeforeRenderingPostProcessing);
-            // m_PostProcessPass = new PostProcessPass(RenderPassEvent.BeforeRenderingPostProcessing, data.postProcessData, m_BlitMaterial);
-            // m_FinalPostProcessPass = new PostProcessPass(RenderPassEvent.AfterRendering + 1, data.postProcessData, m_BlitMaterial);
+            #if !REMOVE_POSTPROCESSING
+            m_PostProcessPass = new PostProcessPass(RenderPassEvent.BeforeRenderingPostProcessing, data.postProcessData, m_BlitMaterial);
+            m_FinalPostProcessPass = new PostProcessPass(RenderPassEvent.AfterRendering + 1, data.postProcessData, m_BlitMaterial);
+            #endif
             m_CapturePass = new CapturePass(RenderPassEvent.AfterRendering);
-            // m_FinalBlitPass = new FinalBlitPass(RenderPassEvent.AfterRendering + 1, m_BlitMaterial);
+            #if !REMOVE_POSTPROCESSING
+            m_FinalBlitPass = new FinalBlitPass(RenderPassEvent.AfterRendering + 1, m_BlitMaterial);
+            #endif
 
 #if UNITY_EDITOR
             m_SceneViewDepthCopyPass = new SceneViewDepthCopyPass(RenderPassEvent.AfterRendering + 9, m_CopyDepthMaterial);
@@ -106,7 +117,9 @@ namespace UnityEngine.Rendering.Universal
         protected override void Dispose(bool disposing)
         {
             // always dispose unmanaged resources
-            // m_PostProcessPass.Cleanup();
+            #if !REMOVE_POSTPROCESSING
+            m_PostProcessPass.Cleanup();
+            #endif
             CoreUtils.Destroy(m_BlitMaterial);
             CoreUtils.Destroy(m_CopyDepthMaterial);
             CoreUtils.Destroy(m_SamplingMaterial);
@@ -145,7 +158,9 @@ namespace UnityEngine.Rendering.Universal
 
 
             // We generate color LUT in the base camera only. This allows us to not break render pass execution for overlay cameras.
-            // bool generateColorGradingLUT = anyPostProcessing && cameraData.renderType == CameraRenderType.Base;
+            #if !REMOVE_POSTPROCESSING
+            bool generateColorGradingLUT = anyPostProcessing && cameraData.renderType == CameraRenderType.Base;
+            #endif
             bool isSceneViewCamera = cameraData.isSceneViewCamera;
             bool isPreviewCamera = cameraData.isPreviewCamera;
             bool requiresDepthTexture = cameraData.requiresDepthTexture;
@@ -178,8 +193,11 @@ namespace UnityEngine.Rendering.Universal
             bool createDepthTexture = cameraData.requiresDepthTexture && !requiresDepthPrepass;
             createDepthTexture |= (cameraData.renderType == CameraRenderType.Base && !cameraData.resolveFinalTarget);
 
+            #if REMOVE_POSTPROCESSING
             createColorTexture = false;
             createDepthTexture = false;
+            #endif
+
             // Configure all settings require to start a new camera stack (base camera only)
             if (cameraData.renderType == CameraRenderType.Base)
             {
@@ -233,12 +251,13 @@ namespace UnityEngine.Rendering.Universal
                 EnqueuePass(m_DepthPrepass);
             }
 
-            //if (generateColorGradingLUT)
-            //{
-            //    m_ColorGradingLutPass.Setup(m_ColorGradingLut);
-            //    EnqueuePass(m_ColorGradingLutPass);
-            //}
-
+            #if !REMOVE_POSTPROCESSING
+            if (generateColorGradingLUT)
+            {
+               m_ColorGradingLutPass.Setup(m_ColorGradingLut);
+               EnqueuePass(m_ColorGradingLutPass);
+            }
+            #endif
             EnqueuePass(m_RenderOpaqueForwardPass);
 
             bool isOverlayCamera = cameraData.renderType == CameraRenderType.Overlay;
@@ -280,17 +299,19 @@ namespace UnityEngine.Rendering.Universal
 
             if (lastCameraInTheStack)
             {
+                
+                #if !REMOVE_POSTPROCESSING
                 // Post-processing will resolve to final target. No need for final blit pass.
                 if (applyPostProcessing)
                 {
-                    // var destination = resolvePostProcessingToCameraTarget ? RenderTargetHandle.CameraTarget : m_AfterPostProcessColor;
+                    var destination = resolvePostProcessingToCameraTarget ? RenderTargetHandle.CameraTarget : m_AfterPostProcessColor;
 
-                    // // if resolving to screen we need to be able to perform sRGBConvertion in post-processing if necessary
-                    // bool doSRGBConvertion = resolvePostProcessingToCameraTarget;
-                    // m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, destination, m_ActiveCameraDepthAttachment, m_ColorGradingLut, applyFinalPostProcessing, doSRGBConvertion);
-                    // EnqueuePass(m_PostProcessPass);
+                    // if resolving to screen we need to be able to perform sRGBConvertion in post-processing if necessary
+                    bool doSRGBConvertion = resolvePostProcessingToCameraTarget;
+                    m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, destination, m_ActiveCameraDepthAttachment, m_ColorGradingLut, applyFinalPostProcessing, doSRGBConvertion);
+                    EnqueuePass(m_PostProcessPass);
                 }
-
+                #endif
                 if (renderingData.cameraData.captureActions != null)
                 {
                     m_CapturePass.Setup(m_ActiveCameraColorAttachment);
@@ -300,12 +321,14 @@ namespace UnityEngine.Rendering.Universal
                 // if we applied post-processing for this camera it means current active texture is m_AfterPostProcessColor
                 var sourceForFinalPass = (applyPostProcessing) ? m_AfterPostProcessColor : m_ActiveCameraColorAttachment;
 
+                #if !REMOVE_POSTPROCESSING
                 // Do FXAA or any other final post-processing effect that might need to run after AA.
-                // if (applyFinalPostProcessing)
-                // {
-                //     m_FinalPostProcessPass.SetupFinalPass(sourceForFinalPass);
-                //     EnqueuePass(m_FinalPostProcessPass);
-                // }
+                if (applyFinalPostProcessing)
+                {
+                    m_FinalPostProcessPass.SetupFinalPass(sourceForFinalPass);
+                    EnqueuePass(m_FinalPostProcessPass);
+                }
+                #endif
 
                 // if post-processing then we already resolved to camera target while doing post.
                 // Also only do final blit if camera is not rendering to RT.
@@ -325,12 +348,14 @@ namespace UnityEngine.Rendering.Universal
                 }
             }
 
+            #if !REMOVE_POSTPROCESSING
             // stay in RT so we resume rendering on stack after post-processing
-            // else if (applyPostProcessing)
-            // {
-            //     m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
-            //     EnqueuePass(m_PostProcessPass);
-            // }
+            else if (applyPostProcessing)
+            {
+                m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false, false);
+                EnqueuePass(m_PostProcessPass);
+            }
+            #endif
 
 #if UNITY_EDITOR
             if (isSceneViewCamera)

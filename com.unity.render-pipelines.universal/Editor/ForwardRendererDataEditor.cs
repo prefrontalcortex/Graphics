@@ -21,7 +21,9 @@ namespace UnityEditor.Rendering.Universal
         SerializedProperty m_OpaqueLayerMask;
         SerializedProperty m_TransparentLayerMask;
         SerializedProperty m_DefaultStencilState;
-        // SerializedProperty m_PostProcessData;
+        #if !REMOVE_POSTPROCESSING
+        SerializedProperty m_PostProcessData;
+        #endif
         SerializedProperty m_Shaders;
         SerializedProperty m_ShadowTransparentReceiveProp;
 
@@ -30,7 +32,9 @@ namespace UnityEditor.Rendering.Universal
             m_OpaqueLayerMask = serializedObject.FindProperty("m_OpaqueLayerMask");
             m_TransparentLayerMask = serializedObject.FindProperty("m_TransparentLayerMask");
             m_DefaultStencilState = serializedObject.FindProperty("m_DefaultStencilState");
-            // m_PostProcessData = serializedObject.FindProperty("postProcessData");
+            #if !REMOVE_POSTPROCESSING
+            m_PostProcessData = serializedObject.FindProperty("postProcessData");
+            #endif
             m_Shaders = serializedObject.FindProperty("shaders");
             m_ShadowTransparentReceiveProp = serializedObject.FindProperty("m_ShadowTransparentReceive");
         }
@@ -42,7 +46,9 @@ namespace UnityEditor.Rendering.Universal
             EditorGUILayout.Space();
             EditorGUILayout.LabelField(Styles.RendererTitle, EditorStyles.boldLabel); // Title
             EditorGUI.indentLevel++;
-            // EditorGUILayout.PropertyField(m_PostProcessData);
+            #if !REMOVE_POSTPROCESSING
+            EditorGUILayout.PropertyField(m_PostProcessData);
+            #endif    
             EditorGUI.indentLevel--;
             EditorGUILayout.Space();
 

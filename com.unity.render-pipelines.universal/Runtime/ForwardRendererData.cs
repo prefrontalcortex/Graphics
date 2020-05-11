@@ -50,8 +50,10 @@ namespace UnityEngine.Rendering.Universal
             public Shader fallbackErrorPS;
         }
 
-        // [Reload("Runtime/Data/PostProcessData.asset")]
-        // public PostProcessData postProcessData = null;
+        #if !REMOVE_POSTPROCESSING
+        [Reload("Runtime/Data/PostProcessData.asset")]
+        public PostProcessData postProcessData = null;
+        #endif
 
         public ShaderResources shaders = null;
 
@@ -66,7 +68,9 @@ namespace UnityEngine.Rendering.Universal
             if (!Application.isPlaying)
             {
                 ResourceReloader.TryReloadAllNullIn(this, UniversalRenderPipelineAsset.packagePath);
-                // ResourceReloader.TryReloadAllNullIn(postProcessData, UniversalRenderPipelineAsset.packagePath);
+                #if !REMOVE_POSTPROCESSING
+                ResourceReloader.TryReloadAllNullIn(postProcessData, UniversalRenderPipelineAsset.packagePath);
+                #endif
             }
 #endif
             return new ForwardRenderer(this);
@@ -134,7 +138,9 @@ namespace UnityEngine.Rendering.Universal
 
 #if UNITY_EDITOR
             ResourceReloader.TryReloadAllNullIn(this, UniversalRenderPipelineAsset.packagePath);
-            // ResourceReloader.TryReloadAllNullIn(postProcessData, UniversalRenderPipelineAsset.packagePath);
+            #if !REMOVE_POSTPROCESSING
+            ResourceReloader.TryReloadAllNullIn(postProcessData, UniversalRenderPipelineAsset.packagePath);
+            #endif
 #endif
         }
     }

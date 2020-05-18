@@ -152,10 +152,13 @@ namespace UnityEngine.Rendering.Universal
             }
 
             // Should apply post-processing after rendering this camera?
-            bool applyPostProcessing = false; // cameraData.postProcessEnabled;
+            bool applyPostProcessing = cameraData.postProcessEnabled;
             // There's at least a camera in the camera stack that applies post-processing
-            bool anyPostProcessing = false; // renderingData.postProcessingEnabled;
-
+            bool anyPostProcessing = renderingData.postProcessingEnabled;
+            #if REMOVE_POSTPROCESSING
+            applyPostProcessing = false;
+            anyPostProcessing = false;
+            #endif
 
             // We generate color LUT in the base camera only. This allows us to not break render pass execution for overlay cameras.
             #if !REMOVE_POSTPROCESSING

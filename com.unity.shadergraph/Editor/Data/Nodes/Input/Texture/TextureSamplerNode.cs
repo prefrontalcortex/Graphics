@@ -35,7 +35,7 @@ namespace UnityEditor.ShaderGraph
         public virtual void GenerateNodeCode(ShaderStringBuilder sb, GenerationMode generationMode)
         {
             var id = GetSlotValue(TextureInputId, generationMode);
-            var result = string.Format("UnitySamplerState {0} = UnityBuildSamplerStateStruct({1}.samplerstate);", GetVariableNameForSlot(SamplerOutputId), id);
+            var result = string.Format("UnitySamplerState {0};\n#ifdef SHADERGRAPH_PREVIEW\n{0}.samplerstate = default_sampler_Linear_Repeat;\n#else\n{0}.samplerstate = {1}.samplerstate;\n#endif", GetVariableNameForSlot(SamplerOutputId), id);
             sb.AppendLine(result);
         }
 

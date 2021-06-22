@@ -579,7 +579,7 @@ namespace UnityEngine.Rendering
         /// <returns>Generated names bassed on the provided parameters.</returns>
         public static string GetRenderTargetAutoName(int width, int height, int depth, RenderTextureFormat format, string name, bool mips = false, bool enableMSAA = false, MSAASamples msaaSamples = MSAASamples.None)
             => GetRenderTargetAutoName(width, height, depth, format.ToString(), name, mips, enableMSAA, msaaSamples);
-            
+
         /// <summary>
         /// Generate a name based on render texture parameters.
         /// </summary>
@@ -1045,7 +1045,7 @@ namespace UnityEngine.Rendering
                 for (int i = 0; i < UnityEditor.SceneView.sceneViews.Count; i++) // Using a foreach on an ArrayList generates garbage ...
                 {
                     var sv = UnityEditor.SceneView.sceneViews[i] as UnityEditor.SceneView;
-                    if (sv.camera == camera && sv.sceneViewState.alwaysRefresh)
+                    if (sv.camera == camera && sv.sceneViewState.showMaterialUpdate)
                     {
                         animateMaterials = true;
                         break;

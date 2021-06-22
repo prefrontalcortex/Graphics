@@ -9,7 +9,7 @@ namespace UnityEditor.ShaderGraph
 {
 
     [CustomEditor(typeof(ShaderGraphImporter))]
-    class ShaderGraphImporterEditor : UnityEditor.AssetImporters.ScriptedImporterEditor
+    class ShaderGraphImporterEditor : UnityEditor.Experimental.AssetImporters.ScriptedImporterEditor
     {
         protected override bool needsApplyRevert => false;
 

@@ -13,8 +13,8 @@ using Object = System.Object;
 
 namespace UnityEditor.ShaderGraph
 {
-    [UnityEditor.AssetImporters.ScriptedImporter(31, Extension, 3)]
-    class ShaderGraphImporter : UnityEditor.AssetImporters.ScriptedImporter
+    [UnityEditor.Experimental.AssetImporters.ScriptedImporter(31, Extension, 3)]
+    class ShaderGraphImporter : UnityEditor.Experimental.AssetImporters.ScriptedImporter
     {
         public const string Extension = "shadergraph";
 
@@ -59,7 +59,7 @@ Shader ""Hidden/GraphErrorShader2""
     }
     Fallback Off
 }";
-        
+
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
         static string[] GatherDependenciesFromSourceFile(string assetPath)
         {
@@ -74,7 +74,7 @@ Shader ""Hidden/GraphErrorShader2""
             }
         }
 
-        public override void OnImportAsset(UnityEditor.AssetImporters.AssetImportContext ctx)
+        public override void OnImportAsset(UnityEditor.Experimental.AssetImporters.AssetImportContext ctx)
         {
             var oldShader = AssetDatabase.LoadAssetAtPath<Shader>(ctx.assetPath);
             if (oldShader != null)
@@ -96,7 +96,7 @@ Shader ""Hidden/GraphErrorShader2""
             if (graph.outputNode is VfxMasterNode vfxMasterNode)
             {
                 var vfxAsset = GenerateVfxShaderGraphAsset(vfxMasterNode);
-                
+
                 mainObject = vfxAsset;
             }
             else

@@ -6,7 +6,7 @@ using Debug = System.Diagnostics.Debug;
 namespace UnityEditor.ShaderGraph
 {
     [CustomEditor(typeof(ShaderSubGraphImporter))]
-    class ShaderSubGraphImporterEditor : UnityEditor.AssetImporters.ScriptedImporterEditor
+    class ShaderSubGraphImporterEditor : UnityEditor.Experimental.AssetImporters.ScriptedImporterEditor
     {
         public override bool showImportedObject => Unsupported.IsDeveloperMode();
         protected override bool needsApplyRevert => false;

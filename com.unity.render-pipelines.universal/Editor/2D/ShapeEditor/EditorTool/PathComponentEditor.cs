@@ -42,15 +42,15 @@ namespace UnityEditor.Experimental.Rendering.Universal.Path2D
                 using (var check = new EditorGUI.ChangeCheckScope())
                 {
                     var isActive = GUI.Toggle(buttonRect, EditorToolManager.IsActiveTool<U>(), icon, buttonStyle);
-                    
+
                     GUI.Label(labelRect, label);
 
                     if (check.changed)
                     {
-                        if (isActive)
-                            ToolManager.SetActiveTool<U>();
-                        else
-                            ToolManager.RestorePreviousTool();
+                        // if (isActive)
+                        //     ToolManager.SetActiveTool<U>();
+                        // else
+                        //     ToolManager.RestorePreviousTool();
                     }
                 }
             }
@@ -99,7 +99,7 @@ namespace UnityEditor.Experimental.Rendering.Universal.Path2D
                     if (EditorToolManager.IsActiveTool<U>() && EditorToolManager.IsAvailable<U>())
                     {
                         var paths = EditorToolManager.GetEditorTool<U>().paths;
-                        
+
                         foreach (var path in paths)
                         {
                             path.undoObject.RegisterUndo("Set Open Ended");

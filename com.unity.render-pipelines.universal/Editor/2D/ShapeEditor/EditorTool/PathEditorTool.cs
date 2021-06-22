@@ -61,7 +61,8 @@ namespace UnityEditor.Experimental.Rendering.Universal.Path2D
 
         internal static bool IsActiveTool<T>() where T : EditorTool
         {
-            return ToolManager.activeToolType.Equals(typeof(T));
+            // return ToolManager.activeToolType.Equals(typeof(T));
+            return false;
         }
 
         internal static bool IsAvailable<T>() where T : EditorTool
@@ -89,8 +90,8 @@ namespace UnityEditor.Experimental.Rendering.Universal.Path2D
         {
             foreach (var tool in m_Tools)
             {
-                if (tool.IsAvailable() && ToolManager.IsActiveTool(tool as EditorTool))
-                    tool.DuringSceneGui(sceneView);
+                // if (tool.IsAvailable() && ToolManager.IsActiveTool(tool as EditorTool))
+                //     tool.DuringSceneGui(sceneView);
             }
         }
     }
@@ -140,7 +141,7 @@ namespace UnityEditor.Experimental.Rendering.Universal.Path2D
 
             var undoName = Undo.GetCurrentGroupName();
             var serializedObject = GetSerializedObject(target);
-            
+
             serializedObject.UpdateIfRequiredOrScript();
 
             SetShape(path, serializedObject);
@@ -167,23 +168,23 @@ namespace UnityEditor.Experimental.Rendering.Universal.Path2D
             SetupRectSelector();
             HandleActivation();
 
-            ToolManager.activeToolChanged += HandleActivation;
+            // ToolManager.activeToolChanged += HandleActivation;
         }
 
         private void OnDestroy()
         {
             EditorToolManager.Remove(this);
 
-            ToolManager.activeToolChanged -= HandleActivation;
+            // ToolManager.activeToolChanged -= HandleActivation;
             UnregisterCallbacks();
         }
 
         private void HandleActivation()
         {
-            if (m_IsActive == false && ToolManager.IsActiveTool(this))
-                Activate();
-            else if (m_IsActive)
-                Deactivate();
+            // if (m_IsActive == false && ToolManager.IsActiveTool(this))
+            //     Activate();
+            // else if (m_IsActive)
+            //     Deactivate();
         }
 
         private void Activate()
@@ -375,11 +376,11 @@ namespace UnityEditor.Experimental.Rendering.Universal.Path2D
         {
             if (m_GUIState.eventType == EventType.Layout)
                 m_Controller.ClearClosestPath();
-                
+
             m_RectSelector.OnGUI();
 
             bool changed = false;
-            
+
             ForEachTarget((target) =>
             {
                 var path = GetPath(target);
